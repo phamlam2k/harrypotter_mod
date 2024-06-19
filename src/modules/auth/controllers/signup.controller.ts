@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 
-const useLoginController = () => {
-  const loginForm = useForm({
+const useSignUpController = () => {
+  const signUpForm = useForm({
     mode: "onSubmit",
   });
 
@@ -10,10 +10,9 @@ const useLoginController = () => {
   };
 
   return {
-    loginForm,
+    signUpForm,
     handleSubmit,
   };
 };
 
-
-export default useLoginController;
+export default useSignUpController;

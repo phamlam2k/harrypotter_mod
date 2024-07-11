@@ -24,7 +24,7 @@ const Footer = () => {
         <Box sx={{ margin: '10px 0' }}>
           <IconButton
             component={Link}
-            href=""
+            href="https://www.facebook.com"
             aria-label="Facebook"
             sx={{ color: '#3b5998' }}
           >

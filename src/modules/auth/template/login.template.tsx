@@ -38,12 +38,12 @@ const LoginTemplate = () => {
       style={{ width: "100%" }}
     >
       <TextField
-        id="username"
+        id="email"
         label="Email address"
         variant="outlined"
         fullWidth
         margin="normal"
-        {...loginForm.register("username", {
+        {...loginForm.register("email", {
           required: "Email is required",
           pattern: {
             value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,

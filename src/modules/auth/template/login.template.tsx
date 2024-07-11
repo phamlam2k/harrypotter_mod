@@ -89,7 +89,7 @@ const LoginTemplate = () => {
         }}
       />
       <Link
-        href="#"
+        href="/auth/forgot-password"
         variant="body2"
         align="right"
         display="block"

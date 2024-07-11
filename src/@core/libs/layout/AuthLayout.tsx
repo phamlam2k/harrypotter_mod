@@ -10,22 +10,42 @@ import {
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import { imageDetails } from "../constants/const";
+import { Outlet, useLocation } from "react-router-dom";
+import { imageLoginDetails, imageSignUpDetails, imageForgotPasswordDetails } from "../constants/const";
 
 const AuthLayout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location  = useLocation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageDetails, setImageDetails] = useState(imageLoginDetails);
+
+  useEffect(() => {
+    let details;
+    switch (location.pathname) {
+      case '/auth/signup':
+        details = imageSignUpDetails;
+        break;
+      case '/auth/forgot-password':
+        details = imageForgotPasswordDetails;
+        break;
+      case '/auth/login':
+      default:
+        details = imageLoginDetails;
+        break;
+    }
+    setImageDetails(details);
+    setCurrentImageIndex(0);
+  }, [location.pathname]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(
         (prevIndex) => (prevIndex + 1) % imageDetails.length
       );
-    }, 7000);
+    }, 8000);
     return () => clearInterval(interval);
-  }, []);
+  }, [imageDetails]);
 
   return (
     <Box
@@ -68,32 +88,40 @@ const AuthLayout = () => {
                 }}
               />
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-              <Button
-                component={Link}
-                href="/auth/login"
-                variant="text"
-                sx={{
-                  fontFamily: "sans-serif",
-                  textTransform: "none",
-                  fontWeight: "bold",
-                  borderBottom: "2px solid purple",
-                  marginRight: 2,
-                }}
-              >
-                Log In
-              </Button>
-              <Button
-                component={Link}
-                href="/auth/signup"
-                variant="text"
-                sx={{ fontFamily: "sans-serif", textTransform: "none" }}
-              >
-                Sign Up
-              </Button>
-            </Box>
-            <Divider sx={{ mb: 2 }} />
-
+            {location.pathname !== "/auth/forgot-password" && (
+              <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                <Button
+                  component={Link}
+                  href="/auth/login"
+                  variant="text"
+                  sx={{
+                    fontFamily: "sans-serif",
+                    textTransform: "none",
+                    fontWeight: location.pathname === '/auth/login' ? "bold" : "normal",
+                    borderBottom: location.pathname === '/auth/login' ? "2px solid purple" : "0",
+                    marginRight: 2,
+                  }}
+                >
+                  Log In
+                </Button>
+                <Button
+                  component={Link}
+                  href="/auth/signup"
+                  variant="text"
+                  sx={{ 
+                    fontFamily: "sans-serif", 
+                    textTransform: "none",
+                    fontWeight: location.pathname === '/auth/signup' ? "bold" : "normal",
+                    borderBottom: location.pathname === '/auth/signup' ? "2px solid purple" : "0",
+                    marginRight: 2
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Box>
+            )}
+            {location.pathname !== "/auth/forgot-password" && <Divider sx={{ mb: 2 }} />}
+        
             {/*  Auth form Content */}
             <Outlet />
 
@@ -130,7 +158,7 @@ const AuthLayout = () => {
             alignItems: "center",
             color: "white",
             padding: 4,
-            transition: "2s",
+            transition: "1s",
           }}
         >
           <Typography

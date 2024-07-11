@@ -8,3 +8,7 @@ export const LoginLazyPage = lazy(
 export const SignUpLazyPage = lazy(
   () => import("../../../modules/auth/template/signup.template")
 );
+
+export const ForgortPasswordLazyPage = lazy(
+  () => import("../../../modules/auth/template/forgotpassword.template")
+);

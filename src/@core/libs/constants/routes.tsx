@@ -1,6 +1,6 @@
 import { Route, createRoutesFromElements } from "react-router-dom";
 import RootLayout from "../layout/RootLayout";
-import { LoginLazyPage, SignUpLazyPage } from "./lazy";
+import { LoginLazyPage, SignUpLazyPage, ForgortPasswordLazyPage } from "./lazy";
 import { Suspense } from "react";
 import AuthLayout from "../layout/AuthLayout";
 import HomeLayout from "../layout/HomeLayout";
@@ -26,10 +26,19 @@ const ROUTES = createRoutesFromElements(
           </Suspense>
         }
       />
+      <Route
+        path="forgot-password"
+        element={
+          <Suspense fallback={<p>Loading SignUp Page</p>}>
+            <ForgortPasswordLazyPage />
+          </Suspense>
+        }
+      />
     </Route>
-    <Route path="/home/" element={<HomeLayout />}>
+    <Route path="/" element={<HomeLayout />}>
       <Route path="" element={<HomeTemplate />} />
       <Route path="test" element={<TestTemplate />} />
+
     </Route>
   </Route>
 );

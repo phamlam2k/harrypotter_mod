@@ -1,4 +1,6 @@
-interface Book {
+import { Chapter } from "./chapter.type";
+
+export interface Book {
   id: number;
   title: string;
   author: string;

@@ -6,6 +6,7 @@ import AuthLayout from "../layout/AuthLayout";
 import HomeLayout from "../layout/HomeLayout";
 import HomeTemplate from "src/modules/apps/home/template/home.template";
 import TestTemplate from "src/modules/apps/home/template/test.template";
+import BookTemplate from "src/modules/apps/home/template/book.template";
 
 const ROUTES = createRoutesFromElements(
   <Route path="/" element={<RootLayout />}>
@@ -37,6 +38,7 @@ const ROUTES = createRoutesFromElements(
     </Route>
     <Route path="/" element={<HomeLayout />}>
       <Route path="" element={<HomeTemplate />} />
+      <Route path="books/:id" element={<BookTemplate />} />
       <Route path="test" element={<TestTemplate />} />
 
     </Route>

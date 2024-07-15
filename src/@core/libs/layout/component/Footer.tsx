@@ -40,7 +40,7 @@ const Footer = () => {
           </IconButton>
         </Box>
         <Typography variant="body2" color="textSecondary">
-          Powered by daC Tuan Thanh Nguyen 
+          Powered by Dac Tuan Thanh Nguyen 
         </Typography>
       </Container>
     </Box>

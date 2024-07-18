@@ -1,7 +1,10 @@
 import { useState, MouseEvent } from "react";
 import { Chapter } from "src/types/chapter.type";
 
-const useBookController = () => {
+const useBookController = (
+  addChapter: (parentChapter: Chapter, newChapter: Chapter) => void,
+  deleteChapter: (chapterId: string) => void
+) => {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -30,13 +33,24 @@ const useBookController = () => {
   };
 
   const handleSave = () => {
-    if (selectedChapter) {
-      console.log(
-        `New content for ${selectedChapter.label}:`,
-        newChapterContent
-      );
+    if (selectedChapter && dialogType === "rewrite") {
+      const newChapter: Chapter = {
+        id: `${selectedChapter.id}-${new Date().getTime()}`,
+        label: `${selectedChapter.label}.${
+          (selectedChapter.children || []).length + 1
+        }`,
+        content: newChapterContent,
+        parent: selectedChapter.id,
+        children: [],
+      };
+      addChapter(selectedChapter, newChapter);
     }
     handleCloseDialog();
+  };
+
+  const handleDelete = (chapterId: string) => {
+    deleteChapter(chapterId);
+    handleCloseMenu();
   };
 
   return {
@@ -45,14 +59,13 @@ const useBookController = () => {
     dialogOpen,
     dialogType,
     newChapterContent,
-
     setNewChapterContent,
-
     handleSave,
     handleOpenMenu,
     handleCloseMenu,
     handleOpenDialog,
     handleCloseDialog,
+    handleDelete,
   };
 };
 

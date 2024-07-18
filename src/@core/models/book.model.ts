@@ -18,6 +18,7 @@ export const books: Book[] = [
       { id: "4", label: "Chapter 4", content: "Content of Chapter 4" },
       { id: "5", label: "Chapter 5", content: "Content of Chapter 5" },
       { id: "6", label: "Chapter 6", content: "Content of Chapter 6" },
+      { id: "7", label: "Chapter 6", content: "Content of Chapter 6" },
     ],
   },
   {

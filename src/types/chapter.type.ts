@@ -4,4 +4,5 @@ export interface Chapter {
   content: string;
   parent?: string;
   children?: Chapter[];
+  position?: { x: number; y: number };
 }

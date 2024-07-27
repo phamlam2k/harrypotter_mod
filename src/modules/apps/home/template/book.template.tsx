@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -17,6 +17,7 @@ import {
   Avatar,
   List,
   ListItem,
+  Icon,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ReactFlow, { MiniMap, Controls, Node, Edge } from "react-flow-renderer";
@@ -28,26 +29,49 @@ import useBookController from "../controllers/book.controller";
 import { useNavigate, useParams } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import { Chapter } from "src/types/chapter.type";
+import { Book } from "src/types/book.type";
+import { Edit, Visibility } from "@mui/icons-material";
 
 const BookTemplate = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const book = books.find((b) => b.id === Number(id));
-  const filteredBooks = books.filter((b) => b.id !== Number(id));
-  const otherBooks = filteredBooks.slice(0, 5);
+  
+  const [book, setBook] = useState<Book | null>(null);
+  const [otherBooks, setOtherBooks] = useState<Book[]>([]);
 
-  const [chapters, setChapters] = useState(book ? book.chapters : []);
+  useEffect(() => {
+    const selectedBook = books.find((b) => b.id === Number(id)) || null;
+    setBook(selectedBook);
+    
+    const filteredBooks = books.filter((b) => b.id !== Number(id));
+    setOtherBooks(filteredBooks.slice(0, 5));
+  }, [id]);
+
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+
+  useEffect(() => {
+    if (book) {
+      setChapters(book.chapters);
+    }
+  }, [book]);
 
   const addChapter = (parentChapter: Chapter, newChapter: Chapter) => {
     setChapters((prevChapters) => {
       const updatedChapters = [...prevChapters];
       const parentIndex = updatedChapters.findIndex((ch) => ch.id === parentChapter.id);
       if (parentIndex !== -1) {
+        const parentPosition = updatedChapters[parentIndex].position || { x: 100, y: 0 };
+        const siblingCount = updatedChapters[parentIndex].children?.length || 0;
+        const newPosition = {
+          x: parentPosition.x + 200,
+          y: parentPosition.y + (siblingCount * 100),
+        };
+
         updatedChapters[parentIndex] = {
           ...updatedChapters[parentIndex],
-          children: [...(updatedChapters[parentIndex].children || []), newChapter],
+          children: [...(updatedChapters[parentIndex].children || []), { ...newChapter, position: newPosition }],
         };
-        updatedChapters.push(newChapter);
+        updatedChapters.push({ ...newChapter, position: newPosition });
       }
       return updatedChapters;
     });
@@ -55,7 +79,7 @@ const BookTemplate = () => {
 
   const deleteChapter = (chapterId: string) => {
     const removeChapterAndChildren = (chapters: Chapter[], id: string): Chapter[] => {
-      return chapters.filter(chapter => {
+      return chapters.filter((chapter) => {
         if (chapter.id === id) return false;
         if (chapter.children) {
           chapter.children = removeChapterAndChildren(chapter.children, id);
@@ -101,7 +125,7 @@ const BookTemplate = () => {
         </>
       ),
     },
-    position: chapter.parent ? { x: 450, y: 100 , z:100 + chapters.findIndex(c => c.id === chapter.parent) * 100 } : { x: 250, y: chapters.findIndex(c => c.id === chapter.id) * 100 },
+    position: chapter.position || { x: 100, y: chapters.findIndex((c) => c.id === chapter.id) * 100 },
   }));
 
   const edges: Edge[] = chapters
@@ -165,73 +189,94 @@ const BookTemplate = () => {
             </Typography>
           </Box>
         </Box>
-        <Dialog
-          open={dialogOpen}
-          onClose={handleCloseDialog}
-          maxWidth="md"
-          fullWidth
-          sx={{ '& .MuiPaper-root': { borderRadius: 3, boxShadow: 3 } }}
-        >
-          <DialogTitle
-            sx={{
-              background: 'linear-gradient(135deg, #ff4081 0%, #ff80ab 100%)',
-              color: 'white',
-              textAlign: 'center',
-            }}
-          >
-            {dialogType === "rewrite"
-              ? `Rewrite ${selectedChapter?.label}`
-              : `Read More ${selectedChapter?.label}`}
-          </DialogTitle>
-          <DialogContent
-            sx={{
-              p: 4,
-              backgroundColor: '#f9f9f9',
-              maxHeight: '70vh',
-              overflow: 'auto',
-            }}
-          >
-            {dialogType === "rewrite" ? (
-              <TextField
-                autoFocus
-                margin="dense"
-                label="New Chapter Content"
-                type="text"
-                fullWidth
-                multiline
-                rows={10}
-                value={newChapterContent}
-                onChange={(e) => setNewChapterContent(e.target.value)}
-                sx={{
-                  '& .MuiInputBase-input': { backgroundColor: 'white', borderRadius: 1, padding: 2 },
-                  boxShadow: 1,
-                }}
-              />
-            ) : (
-              <Box
-                sx={{
-                  whiteSpace: 'pre-line',
-                  color: 'text.secondary',
-                  fontFamily: 'serif',
-                  fontSize: '1rem',
-                  lineHeight: 1.6,
-                }}
-              >
-                {selectedChapter?.content}
-              </Box>
-            )}
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: 'center', p: 2, backgroundColor: '#f9f9f9' }}>
-            <Button onClick={handleCloseDialog} color="secondary" variant="contained" sx={{ mr: 2 }}>
-              Cancel
-            </Button>
-            {dialogType === "rewrite" && (
-              <Button onClick={handleSave} color="primary" variant="contained">
-                Save
-              </Button>
-            )}
-          </DialogActions>
-        </Dialog>
+       <Dialog
+  open={dialogOpen}
+  onClose={handleCloseDialog}
+  maxWidth="md"
+  fullWidth
+  sx={{
+    "& .MuiPaper-root": {
+      borderRadius: 4, // Adjusted for a more rounded look
+      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)", // Softer shadow for elegance
+    },
+  }}
+>
+  <DialogTitle
+    sx={{
+      background: "linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%)",
+      color: "#333",
+      textAlign: "center",
+      padding: "16px 24px",
+      borderRadius: "16px 16px 0 0",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      fontFamily: "'Merriweather', serif", // Book-like font
+      fontSize: "1.5rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <Icon component={dialogType === "rewrite" ? Edit : Visibility} />
+      {dialogType === "rewrite" ? `Rewrite ${selectedChapter?.label}` : `Read More ${selectedChapter?.label}`}
+    </Box>
+  </DialogTitle>
+  <DialogContent
+    sx={{
+      p: 4,
+      backgroundColor: "#fafafa",
+      maxHeight: "70vh",
+      overflow: "auto",
+      fontFamily: "'Merriweather', serif", // Consistent font
+      fontSize: "1rem",
+      lineHeight: 1.6,
+    }}
+  >
+    {dialogType === "rewrite" ? (
+      <TextField
+        autoFocus
+        margin="dense"
+        label="New Chapter Content"
+        type="text"
+        fullWidth
+        multiline
+        rows={10}
+        value={newChapterContent}
+        onChange={(e) => setNewChapterContent(e.target.value)}
+        sx={{
+          "& .MuiInputBase-input": { backgroundColor: "white", borderRadius: 1, padding: 2 },
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Subtle shadow for input
+        }}
+      />
+    ) : (
+      <Box
+        sx={{
+          whiteSpace: "pre-line",
+          color: "#333",
+          fontFamily: "'Merriweather', serif",
+          fontSize: "1rem",
+          lineHeight: 1.6,
+          padding: "16px",
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        {selectedChapter?.content}
+      </Box>
+    )}
+  </DialogContent>
+  <DialogActions sx={{ justifyContent: "center", p: 2, backgroundColor: "#fafafa" }}>
+    <Button onClick={handleCloseDialog} color="secondary" variant="contained" sx={{ mr: 2 }}>
+      Cancel
+    </Button>
+    {dialogType === "rewrite" && (
+      <Button onClick={handleSave} color="primary" variant="contained">
+        Save
+      </Button>
+    )}
+  </DialogActions>
+</Dialog>
 
         <Menu
           anchorEl={menuAnchorEl}
@@ -299,7 +344,7 @@ const BookTemplate = () => {
                 }
               />
             </ListItem>
-          ))}   
+          ))}
         </List>
       </Box>
     </Container>

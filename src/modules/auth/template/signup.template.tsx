@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import useSignUpController from "../controllers/signup.controller"; // Assuming you have a sign-up controller
+import useSignUpController from "../controllers/signup.controller";
 
 const SignUpTemplate = () => {
-  const { signUpForm, handleSubmit } = useSignUpController();
+  const { register, handleSubmit, errors, getValues, loading, error, success } = useSignUpController();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -39,7 +39,7 @@ const SignUpTemplate = () => {
 
   return (
     <form
-      onSubmit={signUpForm.handleSubmit(handleSubmit)}
+      onSubmit={handleSubmit}
       noValidate
       style={{ width: "100%" }}
     >
@@ -49,15 +49,15 @@ const SignUpTemplate = () => {
         variant="outlined"
         fullWidth
         margin="normal"
-        {...signUpForm.register("username", {
+        {...register("username", {
           required: "Username is required",
           minLength: {
             value: 3,
             message: "Username must be at least 3 characters long",
           },
         })}
-        error={!!signUpForm.formState.errors.username}
-        helperText={getErrorMessage(signUpForm.formState.errors.username)}
+        error={!!errors.username}
+        helperText={getErrorMessage(errors.username)}
       />
       <TextField
         id="email"
@@ -65,15 +65,15 @@ const SignUpTemplate = () => {
         variant="outlined"
         fullWidth
         margin="normal"
-        {...signUpForm.register("email", {
+        {...register("email", {
           required: "Email is required",
           pattern: {
             value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
             message: "Invalid email address",
           },
         })}
-        error={!!signUpForm.formState.errors.email}
-        helperText={getErrorMessage(signUpForm.formState.errors.email)}
+        error={!!errors.email}
+        helperText={getErrorMessage(errors.email)}
       />
       <TextField
         id="password"
@@ -82,7 +82,7 @@ const SignUpTemplate = () => {
         type={showPassword ? "text" : "password"}
         fullWidth
         margin="normal"
-        {...signUpForm.register("password", {
+        {...register("password", {
           required: "Password is required",
           minLength: {
             value: 6,
@@ -93,8 +93,8 @@ const SignUpTemplate = () => {
             message: "Password must be no more than 12 characters long",
           },
         })}
-        error={!!signUpForm.formState.errors.password}
-        helperText={getErrorMessage(signUpForm.formState.errors.password)}
+        error={!!errors.password}
+        helperText={getErrorMessage(errors.password)}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -117,16 +117,14 @@ const SignUpTemplate = () => {
         type={showConfirmPassword ? "text" : "password"}
         fullWidth
         margin="normal"
-        {...signUpForm.register("confirmPassword", {
+        {...register("confirmPassword", {
           required: "Confirm Password is required",
           validate: (value: any) =>
-            value === signUpForm.getValues("password") ||
+            value === getValues("password") ||
             "Passwords do not match",
         })}
-        error={!!signUpForm.formState.errors.confirmPassword}
-        helperText={getErrorMessage(
-          signUpForm.formState.errors.confirmPassword
-        )}
+        error={!!errors.confirmPassword}
+        helperText={getErrorMessage(errors.confirmPassword)}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -142,16 +140,16 @@ const SignUpTemplate = () => {
           ),
         }}
       />
-      <FormControl error={!!signUpForm.formState.errors.terms} sx={{ mt: 2 }}>
+      <FormControl error={!!errors.terms} sx={{ mt: 2 }}>
         <FormControlLabel
           control={<Checkbox name="terms" color="primary" />}
           label="I agree to the terms and conditions"
-          {...signUpForm.register("terms", {
+          {...register("terms", {
             required: "You must agree to the terms and conditions",
           })}
         />
         <FormHelperText>
-          {getErrorMessage(signUpForm.formState.errors.terms)}
+          {getErrorMessage(errors.terms)}
         </FormHelperText>
       </FormControl>
 
@@ -165,9 +163,13 @@ const SignUpTemplate = () => {
           backgroundColor: "#6200ea",
           "&:hover": { backgroundColor: "#3700b3" },
         }}
+        disabled={loading}
       >
-        SIGN UP
+        {loading ? "Signing Up..." : "SIGN UP"}
       </Button>
+
+      {error && <p style={{textAlign: "center",  color: "red" }}>{error}</p>}
+      {success && <p style={{textAlign: "center",  color: "green" }}>Registration successful!</p>}
     </form>
   );
 };

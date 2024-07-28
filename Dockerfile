@@ -4,6 +4,9 @@ FROM node:lts-alpine
 # Set the working directory in the container
 WORKDIR /usr/src/harry
 
+# Copy package.json and pnpm-lock.yaml
+COPY package.json ./
+
 # Install dependencies
 RUN npm install -f
 

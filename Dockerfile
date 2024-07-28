@@ -2,10 +2,10 @@
 FROM node:lts-alpine
 
 # Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /usr/src/harry
 
 # Install dependencies
-RUN npm install --force
+RUN npm install -f
 
 # Copy the local project files to the container
 COPY . .

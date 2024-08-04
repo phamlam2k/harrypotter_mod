@@ -106,10 +106,8 @@ const Header = () => {
             <MenuIcon />
           </IconButton>
         </IconWrapper>
-        <Link href="/" >
-  
-            <img src={logo} alt="Hogwarts is Here" style={{ height: '40px', marginRight: 'auto', marginLeft: '10px', marginTop: '8px' }} />
-      
+        <Link href="/">
+          <img src={logo} alt="Hogwarts is Here" style={{ height: '40px', marginRight: 'auto', marginLeft: '10px', marginTop: '8px' }} />
         </Link>
         <Search>
           <SearchIconWrapper>
@@ -164,7 +162,6 @@ const Header = () => {
           onClose={handleClose}
           title="Notifications"
           viewAllText="View All"
-          
         />
 
         <IconWrapper>
@@ -209,7 +206,7 @@ const Header = () => {
         open={drawerOpen}
         onClose={toggleDrawer(false)}
       >
-        <SidebarContent />
+        <SidebarContent setOpen={setDrawerOpen} />
       </Drawer>
     </AppBar>
   );

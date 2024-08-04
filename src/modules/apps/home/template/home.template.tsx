@@ -2,11 +2,8 @@ import React from "react";
 import {
   Typography,
   Button,
-  Tabs,
-  Tab,
   Box,
   TextField,
-  Container,
   Grid,
   Card,
   CardMedia,
@@ -16,9 +13,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { books } from "src/@core/models/book.model";
-import useHomeController from "../controllers/home.controller";
 import {
-  HeaderImage,
   InfoHeader,
   InfoSection,
   SearchBar,
@@ -54,24 +49,14 @@ const BookCard: React.FC<{ book: IBookProps }> = ({ book }) => (
 );
 
 const Home = () => {
-  const { tabValue, handleTabChange } = useHomeController();
 
   return (
     <div>
-      <HeaderImage>
-        <Typography variant="h2">The Hogwarts Library</Typography>
-      </HeaderImage>
-      <Container>
-        <Tabs value={tabValue} onChange={handleTabChange} centered>
-          <Tab label="Textbooks" />
-          <Tab label="Most Popular" />
-          <Tab label="Recently Updated" />
-        </Tabs>
-        <SearchBar>
+      <SearchBar>
           <TextField
             variant="outlined"
             fullWidth
-            placeholder="Search the Hogwarts Library Story..."
+            placeholder="Search the Hogwarts Library Books..."
             InputProps={{
               startAdornment: <SearchIcon />,
             }}
@@ -109,7 +94,6 @@ const Home = () => {
             )
           )}
         </Grid>
-      </Container>
     </div>
   );
 };

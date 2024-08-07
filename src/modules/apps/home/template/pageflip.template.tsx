@@ -4,12 +4,25 @@ import { Typography, Box, Container } from "@mui/material";
 import { books } from "src/@core/models/book.model";
 import HTMLFlipBook from "react-pageflip"; // Default import for HTMLFlipBook
 
+const HTMLFlipBookCustom = HTMLFlipBook as any;
+
 // Define the Page component using React.forwardRef
-const Page = forwardRef<HTMLDivElement, { number: number; image: string }>((props, ref) => {
+const Page = forwardRef<HTMLDivElement, { number: number }>((props, ref) => {
   return (
-    <div className="demoPage" ref={ref} style={{ width: '100%', height: '100%' }}>
-      <img src={props.image} alt={`Page ${props.number}`} style={{ width: '100%', height: '100%' }} />
-      <p>Page number: {props.number}</p>
+    <div
+      className="demoPage"
+      ref={ref}
+      style={{ width: "100%", height: "100%" }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          backgroundColor: "lightblue",
+        }}
+      >
+        <p>Page number: {props.number}</p>
+      </Box>
     </div>
   );
 });
@@ -24,7 +37,9 @@ const PageFlipComponent = () => {
   }
 
   if (!chapter.pages || chapter.pages.length === 0) {
-    return <Typography variant="h6">No pages available for this chapter</Typography>;
+    return (
+      <Typography variant="h6">No pages available for this chapter</Typography>
+    );
   }
 
   return (
@@ -36,24 +51,11 @@ const PageFlipComponent = () => {
         <Typography variant="h6" gutterBottom>
           Chapter {chapter.id}: {chapter.label}
         </Typography>
-        <HTMLFlipBook
-          width={400}
-          height={600}
-          size="stretch"
-          minWidth={315}
-          maxWidth={1000}
-          minHeight={400}
-          maxHeight={1350}
-          maxShadowOpacity={0.5}
-          showCover={true}
-          mobileScrollSupport={false}
-          className=""
-          style={{}}
-        >
-          {chapter.pages.map((page, index) => (
-            <Page key={index} number={index + 1} image={page.image} />
+        <HTMLFlipBookCustom width={300} height={500} isClickFlip={true}>
+          {[1, 2, 3, 4, 5].map((page, index) => (
+            <Page key={index} number={index + 1} />
           ))}
-        </HTMLFlipBook>
+        </HTMLFlipBookCustom>
       </Box>
     </Container>
   );

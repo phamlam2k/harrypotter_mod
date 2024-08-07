@@ -1,8 +1,18 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, Box, Container } from "@mui/material";
 import { books } from "src/@core/models/book.model";
-import HTMLFlipBook from "react-pageflip";
+import HTMLFlipBook from "react-pageflip"; // Default import for HTMLFlipBook
+
+// Define the Page component using React.forwardRef
+const Page = forwardRef<HTMLDivElement, { number: number; image: string }>((props, ref) => {
+  return (
+    <div className="demoPage" ref={ref} style={{ width: '100%', height: '100%' }}>
+      <img src={props.image} alt={`Page ${props.number}`} style={{ width: '100%', height: '100%' }} />
+      <p>Page number: {props.number}</p>
+    </div>
+  );
+});
 
 const PageFlipComponent = () => {
   const { id, chapterId } = useParams();
@@ -26,11 +36,22 @@ const PageFlipComponent = () => {
         <Typography variant="h6" gutterBottom>
           Chapter {chapter.id}: {chapter.label}
         </Typography>
-        <HTMLFlipBook width={400} height={600}>
+        <HTMLFlipBook
+          width={400}
+          height={600}
+          size="stretch"
+          minWidth={315}
+          maxWidth={1000}
+          minHeight={400}
+          maxHeight={1350}
+          maxShadowOpacity={0.5}
+          showCover={true}
+          mobileScrollSupport={false}
+          className=""
+          style={{}}
+        >
           {chapter.pages.map((page, index) => (
-            <div key={index} className="page">
-              <img src={page.image} alt={`Page ${index + 1}`} style={{ width: '100%', height: '100%' }} />
-            </div>
+            <Page key={index} number={index + 1} image={page.image} />
           ))}
         </HTMLFlipBook>
       </Box>

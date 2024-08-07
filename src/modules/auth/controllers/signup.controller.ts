@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axiosInstance from "src/@core/axios/https";
+import { REGISTER_API } from "src/@core/libs/constants/endpointAPI";
 
 interface SignUpFormInputs {
   username: string;
@@ -30,8 +31,12 @@ const useSignUpController = () => {
     setSuccess(false);
 
     try {
-      const response = await axiosInstance.post("/auth/register", data);
-      console.log(response)
+      const response = await axiosInstance.post(REGISTER_API, {
+        fullname: data.username,
+        email: data.email,
+        password: data.password,
+      });
+      console.log(response);
       setSuccess(true);
       console.log("Registration successful:", response.data);
     } catch (error: any) {

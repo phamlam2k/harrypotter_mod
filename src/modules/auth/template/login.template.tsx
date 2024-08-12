@@ -7,13 +7,16 @@ import {
   InputAdornment,
   FormControlLabel,
   Checkbox,
+  Typography,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import useLoginController from "./../controllers/login.controller";
+import useLoginController from "../controllers/login.controller";
 
 const LoginTemplate = () => {
-  const { loginForm, handleSubmit } = useLoginController();
+  const { loginForm, handleSubmit, apiError, loading } = useLoginController();
   const [showPassword, setShowPassword] = useState(false);
 
   const getErrorMessage = (error: any) => {
@@ -32,11 +35,27 @@ const LoginTemplate = () => {
   };
 
   return (
-    <form
-      onSubmit={loginForm.handleSubmit(handleSubmit)}
-      noValidate
-      style={{ width: "100%" }}
-    >
+    <form onSubmit={handleSubmit} noValidate style={{ width: "100%" }}>
+      {apiError && (
+        <Box mb={1} px={2}>
+          <Typography 
+            color="#d32f2f" 
+            variant="body2" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              textAlign: "left",
+              backgroundColor: "#fddcdc",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            • {apiError}
+          </Typography>
+        </Box>
+      )}
       <TextField
         id="email"
         label="Email address"
@@ -50,8 +69,8 @@ const LoginTemplate = () => {
             message: "Invalid email address",
           },
         })}
-        error={!!loginForm.formState.errors.username}
-        helperText={getErrorMessage(loginForm.formState.errors.username)}
+        error={!!loginForm.formState.errors.email}
+        helperText={getErrorMessage(loginForm.formState.errors.email)}
       />
       <TextField
         id="password"
@@ -113,8 +132,10 @@ const LoginTemplate = () => {
           backgroundColor: "#6200ea",
           "&:hover": { backgroundColor: "#3700b3" },
         }}
+        disabled={loading} // Disable button while loading
+        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null} // Show spinner
       >
-        LOGIN
+        {loading ? "Logging in..." : "Log In"} 
       </Button>
     </form>
   );

@@ -4,11 +4,12 @@ import {
   TextField,
   Link,
   Typography,
+  Box,
 } from "@mui/material";
 import useForgotPasswordController from "../controllers/forgotpassword.controller";
 
 const ForgotPasswordTemplate = () => {
-  const { forgotPasswordForm, handleSubmit } = useForgotPasswordController();
+  const { forgotPasswordForm, handleSubmit, apiError, successMessage, loading } = useForgotPasswordController();
 
   const getErrorMessage = (error: any) => {
     if (error && typeof error.message === "string") {
@@ -19,7 +20,46 @@ const ForgotPasswordTemplate = () => {
 
   return (
     <div style={{ width: "100%", padding: "0px" }}>
-
+      {apiError && (
+        <Box mb={3} px={2}>
+          <Typography 
+            color="#d32f2f" 
+            variant="body2" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              textAlign: "left",
+              backgroundColor: "#fddcdc",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            • {apiError}
+          </Typography>
+        </Box>
+      )}
+      {successMessage && (
+        <Box mb={3} px={2}>
+          <Typography 
+            color="#2e7d32" 
+            variant="body2" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              textAlign: "left",
+              backgroundColor: "#e8f5e9",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            • {successMessage}
+          </Typography>
+        </Box>
+      )}
       <Typography variant="body2" align="center" marginBottom="16px">
         Enter your email address below and we'll send you a temporary password.
       </Typography>
@@ -54,8 +94,9 @@ const ForgotPasswordTemplate = () => {
             backgroundColor: "#6200ea",
             "&:hover": { backgroundColor: "#3700b3" },
           }}
+          disabled={loading} // Disable button while loading
         >
-          Reset Password
+          {loading ? "Sending..." : "Reset Password"}
         </Button>
         <Link
           href="/auth/login"

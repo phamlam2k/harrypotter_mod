@@ -6,6 +6,9 @@ import {
   InputAdornment,
   FormControlLabel,
   Checkbox,
+  Typography,
+  Box,
+  CircularProgress,
   FormControl,
   FormHelperText,
 } from "@mui/material";
@@ -38,11 +41,47 @@ const SignUpTemplate = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      style={{ width: "100%" }}
-    >
+    <form onSubmit={handleSubmit} noValidate style={{ width: "100%" }}>
+      {error && (
+        <Box mb={1} px={2}>
+          <Typography 
+            color="#d32f2f" 
+            variant="body2" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              textAlign: "left",
+              backgroundColor: "#fddcdc",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            • {error}
+          </Typography>
+        </Box>
+      )}
+      {success && (
+        <Box mb={3} px={2}>
+          <Typography 
+            color="#2e7d32" 
+            variant="body2" 
+            align="center" 
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              fontSize: "0.875rem",
+              textAlign: "left",
+              backgroundColor: "#e8f5e9",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            • Registration successful!
+          </Typography>
+        </Box>
+      )}
       <TextField
         id="username"
         label="Username"
@@ -120,8 +159,7 @@ const SignUpTemplate = () => {
         {...register("confirmPassword", {
           required: "Confirm Password is required",
           validate: (value: any) =>
-            value === getValues("password") ||
-            "Passwords do not match",
+            value === getValues("password") || "Passwords do not match",
         })}
         error={!!errors.confirmPassword}
         helperText={getErrorMessage(errors.confirmPassword)}
@@ -148,9 +186,7 @@ const SignUpTemplate = () => {
             required: "You must agree to the terms and conditions",
           })}
         />
-        <FormHelperText>
-          {getErrorMessage(errors.terms)}
-        </FormHelperText>
+        <FormHelperText>{getErrorMessage(errors.terms)}</FormHelperText>
       </FormControl>
 
       <Button
@@ -163,13 +199,11 @@ const SignUpTemplate = () => {
           backgroundColor: "#6200ea",
           "&:hover": { backgroundColor: "#3700b3" },
         }}
-        disabled={loading}
+        disabled={loading} // Disable button while loading
+        startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null} // Show spinner
       >
         {loading ? "Signing Up..." : "SIGN UP"}
       </Button>
-
-      {error && <p style={{textAlign: "center",  color: "red" }}>{error}</p>}
-      {success && <p style={{textAlign: "center",  color: "green" }}>Registration successful!</p>}
     </form>
   );
 };

@@ -1,9 +1,10 @@
 import axios from "axios";
 
 // export const baseURL = process.env.PUBLIC_URL
-export const baseURL = "http://14.225.0.210:3010";
+export const baseURL = "http://localhost:6061";
 
-const axiosInstance = axios.create({ baseURL: baseURL, withCredentials: true });
+const axiosInstance = axios.create({ baseURL: baseURL, withCredentials: false });
+
 
 // Add a request interceptor for authentication
 axiosInstance.interceptors.request.use(

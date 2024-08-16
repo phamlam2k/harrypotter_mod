@@ -1,21 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   TextField,
   Link,
   Typography,
   Box,
+  CircularProgress,
+  Dialog,
 } from "@mui/material";
 import useForgotPasswordController from "../controllers/forgotpassword.controller";
+import OTPInput from "./opt.template";
 
 const ForgotPasswordTemplate = () => {
-  const { forgotPasswordForm, handleSubmit, apiError, successMessage, loading } = useForgotPasswordController();
+  const { forgotPasswordForm, handleSubmit, apiError, loading, otpTriggered , setOtpTriggered } = useForgotPasswordController();
+  const [email, setEmail] = useState(""); // State to store the email for OTP verification
 
   const getErrorMessage = (error: any) => {
     if (error && typeof error.message === "string") {
       return error.message;
     }
     return undefined;
+  };
+
+  const handleFormSubmit = async (data: any) => {
+    setEmail(data.email);
+    await handleSubmit(data);
   };
 
   return (
@@ -40,31 +49,12 @@ const ForgotPasswordTemplate = () => {
           </Typography>
         </Box>
       )}
-      {successMessage && (
-        <Box mb={3} px={2}>
-          <Typography 
-            color="#2e7d32" 
-            variant="body2" 
-            align="center" 
-            gutterBottom
-            sx={{
-              fontWeight: 500,
-              fontSize: "0.875rem",
-              textAlign: "left",
-              backgroundColor: "#e8f5e9",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
-            • {successMessage}
-          </Typography>
-        </Box>
-      )}
+
       <Typography variant="body2" align="center" marginBottom="16px">
         Enter your email address below and we'll send you a temporary password.
       </Typography>
       <form
-        onSubmit={forgotPasswordForm.handleSubmit(handleSubmit)}
+        onSubmit={forgotPasswordForm.handleSubmit(handleFormSubmit)}
         noValidate
         style={{ width: "100%" }}
       >
@@ -95,6 +85,7 @@ const ForgotPasswordTemplate = () => {
             "&:hover": { backgroundColor: "#3700b3" },
           }}
           disabled={loading} // Disable button while loading
+          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null} // Show spinner
         >
           {loading ? "Sending..." : "Reset Password"}
         </Button>
@@ -109,6 +100,16 @@ const ForgotPasswordTemplate = () => {
           Back to Login
         </Link>
       </form>
+
+      {/* OTP Verification Dialog */}
+      <Dialog open={otpTriggered} onClose={() => setOtpTriggered(false)}>
+        <OTPInput
+          email={email} // Pass the email to OTPInput component
+          onClose={() => setOtpTriggered(false)}
+          onSuccessRegister={() => setOtpTriggered(false)} // Handle success in parent
+          onResetSuccessRegister={() => setOtpTriggered(false)} // Handle reset in parent
+        />
+      </Dialog>
     </div>
   );
 };

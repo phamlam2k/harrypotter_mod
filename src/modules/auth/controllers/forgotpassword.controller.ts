@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { checkForgotEmailApi } from "src/@core/helpers/apis/auth.api";
 
+// Define the structure of the form values
 interface ForgotPasswordFormValues {
   email: string;
 }
@@ -9,7 +11,7 @@ const useForgotPasswordController = () => {
   const forgotPasswordForm = useForm<ForgotPasswordFormValues>();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [otpTriggered, setOtpTriggered] = useState<boolean>(false);
 
   // Define the correct type for the handleSubmit function
   const handleSubmit: SubmitHandler<ForgotPasswordFormValues> = async (
@@ -17,18 +19,26 @@ const useForgotPasswordController = () => {
   ) => {
     setLoading(true);
     setApiError(null);
-    setSuccessMessage(null);
+    setOtpTriggered(false);
 
     try {
-      // Simulate an API call to reset the password
-      console.log("Reset Password Data:", data);
+      // Call the API function
+      await checkForgotEmailApi(data.email);
+      console.log("Email exists, sending OTP...", data);
 
-      // Simulate successful response
-      setSuccessMessage(
-        "A temporary password has been sent to your email address."
-      );
+      // Trigger OTP component display
+      setOtpTriggered(true);
     } catch (error: any) {
-      setApiError("Failed to reset password. Please try again.");
+      // Extract and set the API error message
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setApiError(error.response.data.message);
+      } else {
+        setApiError("Failed to process your request. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -39,7 +49,8 @@ const useForgotPasswordController = () => {
     handleSubmit,
     loading,
     apiError,
-    successMessage,
+    otpTriggered,
+    setOtpTriggered,
   };
 };
 

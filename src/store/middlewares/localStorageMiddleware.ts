@@ -1,8 +1,8 @@
-import { Middleware } from '@type/store.type'
+import { Middleware } from "redux"
 
 export const localStorageMiddleware = <T>(key: string): Middleware<T> => {
-  return (store) => {
-    return (next) => (action) => {
+  return (store: { getState: () => any }) => {
+    return (next: (arg0: any) => any) => (action: any) => {
       const result = next(action)
       const state = store.getState()
       try {

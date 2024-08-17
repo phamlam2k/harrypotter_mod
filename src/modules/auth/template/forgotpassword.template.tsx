@@ -10,10 +10,14 @@ import {
 } from "@mui/material";
 import useForgotPasswordController from "../controllers/forgotpassword.controller";
 import OTPInput from "./opt.template";
+import ChangePasswordTemplate from "./changepassword.template";
+import SuccessPopupPasswordChange from "./sucesspoppassword.template";
 
 const ForgotPasswordTemplate = () => {
-  const { forgotPasswordForm, handleSubmit, apiError, loading, otpTriggered , setOtpTriggered } = useForgotPasswordController();
-  const [email, setEmail] = useState(""); // State to store the email for OTP verification
+  const { forgotPasswordForm, handleSubmit, apiError, loading, otpTriggered, setOtpTriggered } = useForgotPasswordController();
+  const [email, setEmail] = useState("");
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState(false);
+  const [isChangePassword, setIsChangePassword] = useState(false); // State for success popup
 
   const getErrorMessage = (error: any) => {
     if (error && typeof error.message === "string") {
@@ -27,14 +31,32 @@ const ForgotPasswordTemplate = () => {
     await handleSubmit(data);
   };
 
+  const handleOtpSuccess = () => {
+    setOtpTriggered(false); // Close the OTP dialog
+    setOpenChangePasswordDialog(true); // Open the Change Password dialog
+  };
+
+  const handlePasswordChangeSuccess = () => {
+    setOpenChangePasswordDialog(false); // Close the Change Password dialog
+    setIsChangePassword(true); // Show the success popup
+  };
+
+  const handlePasswordChangeReset = () => {
+    setOpenChangePasswordDialog(false); // Close the dialog
+  };
+
+  const handleOtpResetSuccessRegister = () => {
+    setIsChangePassword(false); // Reset the success popup state
+  };
+
   return (
     <div style={{ width: "100%", padding: "0px" }}>
       {apiError && (
         <Box mb={3} px={2}>
-          <Typography 
-            color="#d32f2f" 
-            variant="body2" 
-            align="center" 
+          <Typography
+            color="#d32f2f"
+            variant="body2"
+            align="center"
             gutterBottom
             sx={{
               fontWeight: 500,
@@ -104,12 +126,28 @@ const ForgotPasswordTemplate = () => {
       {/* OTP Verification Dialog */}
       <Dialog open={otpTriggered} onClose={() => setOtpTriggered(false)}>
         <OTPInput
-          email={email} // Pass the email to OTPInput component
+          email={email}
           onClose={() => setOtpTriggered(false)}
-          onSuccessRegister={() => setOtpTriggered(false)} // Handle success in parent
-          onResetSuccessRegister={() => setOtpTriggered(false)} // Handle reset in parent
+          onSuccessRegister={handleOtpSuccess}
+          onResetSuccessRegister={() => setOtpTriggered(false)}
         />
       </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={openChangePasswordDialog} onClose={() => setOpenChangePasswordDialog(false)}>
+        <ChangePasswordTemplate
+          email={email}
+          onClose={() => setOpenChangePasswordDialog(false)}
+          onSuccessPasswordChange={handlePasswordChangeSuccess}
+          onResetPasswordChange={handlePasswordChangeReset}
+        />
+      </Dialog>
+
+      {/* Success Popup */}
+      <SuccessPopupPasswordChange
+        open={isChangePassword}
+        onClose={handleOtpResetSuccessRegister} // Close and reset success state
+      />
     </div>
   );
 };

@@ -10,5 +10,10 @@ export const CHECK_FORGOT_EMAIL_API = `${BASE_URL_API}/auth/send-otp-forgot`;
 
 export const VERIY_FORGOT_EMAIL_API = `${BASE_URL_API}/auth/verify-otp-forGot`;
 
+export const CHANGE_FORGOT_PASSWORD_API = `${BASE_URL_API}/auth/change-password `;
+
+
+
+
 
 

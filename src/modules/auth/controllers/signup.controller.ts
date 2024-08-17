@@ -38,10 +38,7 @@ const useSignUpController = () => {
       setEmail(data.email)
 
       // Make API request to sign up the user
-      const response = await signupApi(
-        data.username,
-        data.email,
-        data.password
+      const response = await signupApi( data.username, data.email, data.password
       );
 
       // If the sign-up is successful, log the response and update state

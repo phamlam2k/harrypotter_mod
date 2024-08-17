@@ -17,7 +17,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import useSignUpController from "../controllers/signup.controller";
 import OTPInput from "./opt.template";
-import SuccessPopup from "./sucesspop.template"; // Import the SuccessPopup component
+import SuccessPopupRegister from "./sucesspopregister.template";
 
 const SignUpTemplate = () => {
   const { register, handleSubmit, errors, getValues, loading, error, success, emailuser } = useSignUpController();
@@ -222,7 +222,7 @@ const SignUpTemplate = () => {
         />
       </Dialog>
 
-      <SuccessPopup
+      <SuccessPopupRegister
         open={isRegistered}
         onClose={handleOtpResetSuccessRegister} // Close and reset success state
       />

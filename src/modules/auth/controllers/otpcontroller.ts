@@ -1,30 +1,45 @@
 import { useState } from "react";
 import { otpApi } from "src/@core/helpers/apis/auth.api";
+import { verifyForgotEmailApi } from "src/@core/helpers/apis/auth.api";
+
+
 
 export const useOTPController = () => {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null); // Error state
-  const [sucessRegister, setSucessRegister] = useState<boolean>(false); // Corrected type
+  const [error, setError] = useState<string | null>(null);
+  const [sucessRegister, setSucessRegister] = useState<boolean>(false);
 
-  const handleOTPSubmit = async (email: string, otp: string) => {
+  const handleOTPSubmit = async (
+    email: string,
+    otp: string,
+    pageType: string
+  ) => {
     setLoading(true);
     setError(null); // Clear previous errors
     try {
-      const response = await otpApi(email, otp);
-      console.log("OTP submission successful:", response);
-      setSucessRegister(true); // Set successRegister to true on successful OTP submission
+      let response;
+      // API based on page type 
+      if (pageType === "auth/signup") {
+        response = await otpApi(email, otp);
+        console.log("OTP submission successful:", response);
+        setSucessRegister(true); // Set successRegister to true on successful OTP submission
+      } else if (pageType === "auth/forgot-password") {
+        response = await verifyForgotEmailApi(email, otp);
+        console.log("OTP Forgot submission successful:", response);
+        setSucessRegister(true); // Set successRegister to true on successful OTP submission
+      } else {
+        throw new Error("Invalid page type");
+      }
     } catch (error: any) {
       if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // If the API returns an error message, set it
         setError(error.response.data.message);
       } else {
-        // Generic error message
         setError("OTP submission failed. Please try again.");
       }
       console.error("OTP submission failed", error);
@@ -36,17 +51,14 @@ export const useOTPController = () => {
   const handleResendOTP = async () => {
     setResendLoading(true);
     setResendSuccess(false);
-    setError(null); // Clear previous errors
+    setError(null);
 
     try {
-      // Simulate an API call with a 2-second delay using setInterval
       await new Promise((resolve) => {
         const interval = setInterval(() => {
           clearInterval(interval);
-
-          // Simulate a successful API response
           resolve("OTP sent successfully!");
-        }, 1000); // Delay of 2 seconds
+        }, 1000);
       });
 
       setResendSuccess(true);
@@ -59,7 +71,6 @@ export const useOTPController = () => {
     }
   };
 
-  // Function to reset the successRegister state
   const resetSuccessRegister = () => {
     setSucessRegister(false);
   };
@@ -70,8 +81,8 @@ export const useOTPController = () => {
     resendLoading,
     handleResendOTP,
     resendSuccess,
-    sucessRegister, // Return sucessRegister state
-    resetSuccessRegister, // Return the reset function
-    error, // Return the error state
+    sucessRegister,
+    resetSuccessRegister,
+    error,
   };
 };

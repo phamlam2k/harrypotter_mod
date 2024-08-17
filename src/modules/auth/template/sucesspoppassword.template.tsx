@@ -1,6 +1,5 @@
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, IconButton, Button, Box } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Box } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 
 interface SuccessPopupProps {
@@ -8,11 +7,11 @@ interface SuccessPopupProps {
     onClose: () => void;
 }
 
-const SuccessPopup: React.FC<SuccessPopupProps> = ({ open, onClose }) => {
+const SuccessPopupPasswordChange: React.FC<SuccessPopupProps> = ({ open, onClose }) => {
     const navigate = useNavigate();
 
     const handleGoToLogin = () => {
-        navigate('/');
+        navigate('/auth/login'); 
         onClose(); // Close the dialog after navigating
     };
 
@@ -34,22 +33,21 @@ const SuccessPopup: React.FC<SuccessPopupProps> = ({ open, onClose }) => {
         >
             <DialogTitle id="success-dialog-title" sx={{ textAlign: 'center', padding: 0 }}>
                 <Typography variant="h5" sx={{ fontWeight: 600, color: '#333', marginBottom: 2 }}>
-                    Welcome to Hogwarts!
+                    Password Changed Successfully!
                 </Typography>
-              
             </DialogTitle>
             <DialogContent dividers sx={{ padding: '24px 32px', textAlign: 'center' }}>
                 <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
                     <img
-                        src="https://i.pinimg.com/736x/dd/aa/bb/ddaabba83fa4ad32f9b30872b3209c92.jpg"
-                        alt="Welcome to Hogwarts"
+                        src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Harry_Potter_wordmark.svg"
+                        alt="Password Changed"
                         style={{ width: '100%', maxWidth: '240px', marginBottom: '24px' }} // Keep image size larger
                     />
-                    <Typography align="center" sx={{ fontSize: '18px', color: '#444' }}>
-                        Your account has been successfully created!
+                    <Typography align="center" sx={{ fontSize: '18px' }}> 
+                        Your password has been successfully changed.
                     </Typography>
                     <Typography align="center" sx={{ mt: 2, fontSize: '18px', color: '#444' }}>
-                        Welcome to the magical world of Hogwarts! We are delighted to have you join our enchanted community. Here at Hogwarts, you'll embark on an extraordinary journey filled with wonder, learning, and endless possibilities.
+                        Hogwarts is waiting for you. The magical world is filled with endless possibilities, and now you are just one step away from stepping into a realm where the impossible becomes possible. Let the adventures begin!
                     </Typography>
                 </Box>
             </DialogContent>
@@ -66,12 +64,11 @@ const SuccessPopup: React.FC<SuccessPopupProps> = ({ open, onClose }) => {
                         backgroundColor: '#3700b3', // Original darker purple on hover
                     },
                 }}>
-                   Close
+                    Go to Login
                 </Button>
-                
             </DialogActions>
         </Dialog>
     );
 };
 
-export default SuccessPopup;
+export default SuccessPopupPasswordChange;

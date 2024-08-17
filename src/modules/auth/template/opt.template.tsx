@@ -3,6 +3,7 @@ import { TextField, Button, CircularProgress, Typography, Box, IconButton } from
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useOTPController } from "../controllers/otpcontroller";
+import { useLocation } from "react-router-dom";
 
 interface OTPInputProps {
   onClose: () => void;
@@ -15,6 +16,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ onClose, email, onSuccessRegister, 
   const [otp, setOtp] = useState<string>("");
   const [otpError, setOtpError] = useState<string | null>(null);
   const { loading, resendLoading, resendSuccess, handleOTPSubmit, handleResendOTP, error, sucessRegister, resetSuccessRegister } = useOTPController();
+  const location = useLocation();
+  const pageType = location.pathname.replace("/", ""); 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOtp(event.target.value);
@@ -29,7 +32,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ onClose, email, onSuccessRegister, 
       setOtpError("OTP is required");
       return;
     }
-    await handleOTPSubmit(email, otp);
+    await handleOTPSubmit(email, otp , pageType);
 
     if (sucessRegister) {
       onSuccessRegister(); // Notify the parent component that registration was successful

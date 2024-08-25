@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Box, Container, Tabs, Tab, TextField, Typography, Button } from '@mui/material';
+import { Box, Container, Tabs, Tab ,Typography } from '@mui/material';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Header from './component/Header';
 import Footer from './component/Footer';
-import SearchIcon from '@mui/icons-material/Search';
-import { HeaderImage, SearchBar } from 'src/modules/apps/home/_styled/home.styled';
+import { HeaderImage } from 'src/modules/apps/home/_styled/home.styled';
+import withAuth from './../constants/withauth';
 
 const HomeLayout = () => {
   const [tabValue, setTabValue] = React.useState(0);
@@ -53,4 +53,4 @@ const HomeLayout = () => {
 };
 
 
-export default HomeLayout;
+export default withAuth(HomeLayout);

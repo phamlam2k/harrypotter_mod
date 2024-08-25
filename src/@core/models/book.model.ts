@@ -351,7 +351,7 @@ export const books: Book[] = [
   },
   {
     id: 5,
-    title: "Peregrin Tugwood's Guide To Looking Great (and Feeling Fine)",
+    title: "Peregrin Tugwood's Guide To Looking Great",
     author: "Second Edition",
     image:
       "https://upload.wikimedia.org/wikipedia/en/thumb/7/70/Harry_Potter_and_the_Order_of_the_Phoenix.jpg/220px-Harry_Potter_and_the_Order_of_the_Phoenix.jpg",

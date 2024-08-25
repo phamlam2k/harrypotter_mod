@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -15,52 +15,19 @@ import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { styled, alpha } from '@mui/material/styles';
 import IconWrapper from './IconWrapper';
 import SidebarContent from './SideBarContent';
 import CustomMenu from './CustomMenu';
 import logo from './Logo';
 import { Link } from '@mui/material';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 'auto',
-  width: 'auto',
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
+import { Search, SearchIconWrapper, StyledInputBase } from '../styles/styles.header';
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notificationsAnchorEl, setNotificationsAnchorEl] = useState<null | HTMLElement>(null);
   const [mailEl, setMailEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();  // Hook to navigate programmatically
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -90,6 +57,12 @@ const Header = () => {
     }
 
     setDrawerOpen(open);
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken'); // Remove the access token from localStorage
+    navigate('/auth/login'); // Redirect to the login page
   };
 
   return (
@@ -196,7 +169,11 @@ const Header = () => {
             { icon: <PersonIcon />, text: 'View Profile' },
             { icon: <EditIcon />, text: 'Edit Profile' },
             { icon: <SettingsIcon />, text: 'Settings' },
-            { icon: <LogoutIcon />, text: 'Log Out' },
+            {
+              icon: <LogoutIcon />,
+              text: 'Log Out',
+              onClick: handleLogout, // Attach the logout handler to this item
+            },
           ]}
         />
       </Toolbar>

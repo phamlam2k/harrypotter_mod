@@ -1,5 +1,6 @@
 import axiosInstance from "src/@core/axios/https";
-import { CHANGE_FORGOT_PASSWORD_API, CHECK_FORGOT_EMAIL_API, LOGIN_API, OTP_API, REGISTER_API, VERIY_FORGOT_EMAIL_API } from "src/@core/libs/constants/endpointAPI";
+import { CHANGE_FORGOT_PASSWORD_API, CHECK_FORGOT_EMAIL_API, GOOGLE_LOGIN_API, LOGIN_API, OTP_API, REGISTER_API, VERIY_FORGOT_EMAIL_API } from "src/@core/libs/constants/endpointAPI";
+
 
 export const loginApi = async (email: string, password: string) => {
   const response = await axiosInstance.post(LOGIN_API, { email, password });
@@ -32,6 +33,12 @@ export const verifyForgotEmailApi = async (email: string, otp: string) => {
   return response.data;
 };
 
+export const googleLoginApi = async (googleToken: string) => {
+    const response = await axiosInstance.post(GOOGLE_LOGIN_API, {
+      token: googleToken,
+    });
+    return response.data;
+};
 
 export const changePasswordApi = async (email: string, password: string) => {
   const response = await axiosInstance.post(CHANGE_FORGOT_PASSWORD_API, {  email, password });

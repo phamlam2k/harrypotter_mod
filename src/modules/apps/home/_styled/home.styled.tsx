@@ -1,4 +1,6 @@
-import { styled, Box, Paper } from "@mui/material";
+import { styled, Box, Paper, IconButton } from "@mui/material";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export const HeaderImage = styled("div")({
   height: "450px",
@@ -37,3 +39,47 @@ export const InfoHeader = styled(Box)(({ theme }) => ({
   borderTopRightRadius: theme.shape.borderRadius,
   color: theme.palette.common.white,
 }));
+
+export const CustomNextArrow = (props: { onClick?: React.MouseEventHandler<HTMLButtonElement>; }) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        right: '-25px',
+        transform: 'translate(0, -50%)',
+        zIndex: 1,
+        backgroundColor: 'white',
+        '&:hover': {
+          backgroundColor: 'gray',
+        },
+      }}
+    >
+      <ArrowForwardIosIcon />
+    </IconButton>
+  );
+};
+
+export const CustomPrevArrow = (props: { onClick?: React.MouseEventHandler<HTMLButtonElement>; }) => {
+  const { onClick } = props;
+  return (
+    <IconButton
+      onClick={onClick}
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '-25px',
+        transform: 'translate(0, -50%)',
+        zIndex: 1,
+        backgroundColor: 'white',
+        '&:hover': {
+          backgroundColor: 'gray',
+        },
+      }}
+    >
+      <ArrowBackIosIcon />
+    </IconButton>
+  );
+};

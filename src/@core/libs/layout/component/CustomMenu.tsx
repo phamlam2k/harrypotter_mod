@@ -2,6 +2,28 @@ import React from 'react';
 import { Menu, MenuList, MenuItem, Typography, ListItemText, ListItemIcon } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 
+// Define the interface for individual menu items
+interface CustomMenuItemProps {
+  icon: React.ReactNode;
+  text: string;
+  onClick?: () => void; // Optional onClick handler for each item
+}
+
+// Define the interface for the CustomMenu component's props
+interface CustomMenuProps {
+  anchorEl: null | HTMLElement;
+  anchorOrigin: { vertical: string; horizontal: string };
+  keepMounted: true;
+  transformOrigin: { vertical: string; horizontal: string };
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  viewAllText?: string;
+  items?: CustomMenuItemProps[];
+  scrollable?: boolean; // Optional scrollable prop
+}
+
+// Custom styles for the menu container
 const CustomMenuContainer = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     backgroundColor: theme.palette.background.paper,
@@ -17,6 +39,7 @@ const CustomMenuContainer = styled(Menu)(({ theme }) => ({
   },
 }));
 
+// Custom styles for individual menu items
 const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.action.hover, 0.1),
@@ -37,20 +60,16 @@ const CustomMenuItem = styled(MenuItem)(({ theme }) => ({
   },
 }));
 
-interface CustomMenuProps {
-  anchorEl: null | HTMLElement;
-  anchorOrigin: { vertical: string; horizontal: string; };
-  keepMounted: true;
-  transformOrigin: any;
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  viewAllText?: string;
-  items?: { icon: React.ReactNode; text: string }[];
-  scrollable?: boolean;  // Add this new prop
-}
-
-const CustomMenu: React.FC<CustomMenuProps> = ({ anchorEl, open, onClose, title, viewAllText, items, scrollable }) => (
+// The CustomMenu component
+const CustomMenu: React.FC<CustomMenuProps> = ({
+  anchorEl,
+  open,
+  onClose,
+  title,
+  viewAllText,
+  items,
+  scrollable,
+}) => (
   <CustomMenuContainer
     anchorEl={anchorEl}
     anchorOrigin={{
@@ -77,7 +96,13 @@ const CustomMenu: React.FC<CustomMenuProps> = ({ anchorEl, open, onClose, title,
         </CustomMenuItem>
       )}
       {items && items.map((item, index) => (
-        <CustomMenuItem key={index} onClick={onClose}>
+        <CustomMenuItem
+          key={index}
+          onClick={() => {
+            if (item.onClick) item.onClick(); // Call the onClick function if provided
+            onClose(); // Close the menu after an item is clicked
+          }}
+        >
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText primary={item.text} />
         </CustomMenuItem>

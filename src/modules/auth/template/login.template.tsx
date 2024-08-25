@@ -16,7 +16,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import useLoginController from "../controllers/login.controller";
 
 const LoginTemplate = () => {
-  const { loginForm, handleSubmit, apiError, loading } = useLoginController();
+  const { loginForm, handleSubmit, handleGoogleLogin, apiError, loading } = useLoginController();
   const [showPassword, setShowPassword] = useState(false);
 
   const getErrorMessage = (error: any) => {
@@ -38,10 +38,10 @@ const LoginTemplate = () => {
     <form onSubmit={handleSubmit} noValidate style={{ width: "100%" }}>
       {apiError && (
         <Box mb={1} px={2}>
-          <Typography 
-            color="#d32f2f" 
-            variant="body2" 
-            align="center" 
+          <Typography
+            color="#d32f2f"
+            variant="body2"
+            align="center"
             gutterBottom
             sx={{
               fontWeight: 500,
@@ -135,8 +135,19 @@ const LoginTemplate = () => {
         disabled={loading} // Disable button while loading
         startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null} // Show spinner
       >
-        {loading ? "Logging in..." : "Log In"} 
+        {loading ? "Logging in..." : "Log In"}
       </Button>
+      
+      {/* <Box mt={2} display="flex" justifyContent="center">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+        >
+          {loading ? "Opening Google Login..." : "Login with Google"}
+        </Button>
+      </Box> */}
     </form>
   );
 };

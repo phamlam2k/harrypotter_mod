@@ -60,7 +60,7 @@ const CoverPage = forwardRef<HTMLDivElement>((props, ref) => {
       <img
         src={chapterData.coverImg}
         alt="Book Cover"
-        style={{
+        style={{  
           width: "100%",
           height: "100%",
           borderRadius: "12px",
